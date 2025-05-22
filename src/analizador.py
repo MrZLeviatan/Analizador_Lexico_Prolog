@@ -1,13 +1,14 @@
 # analizador.py
-# English: Lexical analyzer to detect natural and real numbers
-# Español: Analizador léxico para detectar números naturales y reales
+# English: Lexical analyzer for Prolog numbers and identifiers
+# Español: Analizador léxico para números e identificadores de Prolog
 
 from tokens.numeros_naturales import es_numero_natural
 from tokens.numero_reales import es_numero_real
+from tokens.identificadores import es_variable, es_atomo
 
 def analizar_codigo(codigo: str):
     """
-    Analiza el código línea por línea y detecta números naturales y reales.
+    Analiza el código y detecta números y identificadores de Prolog.
     """
     resultados = []
     palabras = codigo.replace('\n', ' ').split()
@@ -17,7 +18,12 @@ def analizar_codigo(codigo: str):
             resultados.append((palabra, "Número Natural", pos))
         elif es_numero_real(palabra):
             resultados.append((palabra, "Número Real", pos))
+        elif es_variable(palabra):
+            resultados.append((palabra, "Variable", pos))
+        elif es_atomo(palabra):
+            resultados.append((palabra, "Átomo", pos))
         else:
             resultados.append((palabra, "Token no reconocido", pos))
     
     return resultados
+
