@@ -1,19 +1,5 @@
-# Módulo para validar números reales en Prolog
-
 def es_numero_real(cadena: str) -> bool:
-    
-    """
-    Verifica si una cadena es un número real válido en Prolog.
-    Reglas:
-    - Debe contener exactamente un punto.
-    - Debe tener al menos un dígito antes y después del punto.
 
-    Ejemplos: 12.3 / 3.24 /. 6.66
-    
-    """
-    # Módulo para validar números reales en Prolog
-
-def es_numero_real(cadena: str) -> bool:
     """
     Verifica si una cadena es un número real válido en Prolog.
     Reglas:
