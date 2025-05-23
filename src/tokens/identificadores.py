@@ -5,12 +5,13 @@ def es_variable(cadena: str) -> bool:
     Reglas:
     - Debe comenzar con una letra mayúscula o con un guion bajo.
     - Puede estar seguida de letras (mayúsculas o minúsculas), dígitos o guiones bajos.
+    - Máximo 10 caracteres.
     
     Ejemplos válidos: "X", "_aux", "Var123"
     """
     
-    if len(cadena) == 0:
-        # Si la cadena está vacía, no puede ser una variable válida
+    if len(cadena) == 0 or len(cadena) > 10:
+        # Si la cadena está vacía o excede 10 caracteres, no es una variable válida
         return False
 
     primera = cadena[0]  # Se obtiene el primer carácter de la cadena
@@ -45,8 +46,8 @@ def es_atomo(cadena: str) -> bool:
     Ejemplos válidos: "atom", "valor1", "dato_aux"
     """
     
-    if len(cadena) == 0:
-        # Si la cadena está vacía, no puede ser un átomo válido
+    if len(cadena) == 0 or len(cadena) > 10:
+        # Si la cadena está vacía o excede 10 caracteres, no puede ser un átomo válido
         return False
 
     primera = cadena[0]  # Se obtiene el primer carácter de la cadena
