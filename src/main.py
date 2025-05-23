@@ -1,5 +1,3 @@
-# main.py
-# English: Entry point for GUI
-# Español: Punto de entrada para la GUI
 
+# Ejecutable para la hermosa app toda preciosa, toda divina
 import gui

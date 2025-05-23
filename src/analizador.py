@@ -2,6 +2,7 @@ from tokens.numeros_naturales import es_numero_natural
 from tokens.numero_reales import es_numero_real
 from tokens.identificadores import es_variable, es_atomo
 from tokens.palabras_reservadas import es_palabra_reservada
+from tokens.simbolos_aritmeticos import es_simbolo_aritmetico
 
 simbolos_validos = ['=', ',', '.', '(', ')', '{', '}', '+', '-', '*', '/', '<', '>', '!']
 
@@ -16,7 +17,15 @@ def analizar_codigo(codigo: str):
         j = i
         detectado = False
 
-        # Intentar detectar palabra reservada de izquierda a derecha
+        # Verifica si empieza con 'mod' para tomarlo como operador aritmético
+        if codigo[i:i+3] == "mod":
+            if es_simbolo_aritmetico("mod"):
+                resultados.append(("mod", "Operador Aritmético", pos))
+                pos += 1
+                i += 3
+                continue
+
+        # Detectar palabra reservada completa
         while j < longitud and (codigo[j].isalnum() or codigo[j] == '_'):
             token += codigo[j]
             if es_palabra_reservada(token):
@@ -31,7 +40,6 @@ def analizar_codigo(codigo: str):
             continue
 
         if token != "":
-            # Fragmentar secuencia tipo 23A2isnot
             sub_i = 0
             sub_token = ""
             sub_tipo = None
@@ -47,13 +55,13 @@ def analizar_codigo(codigo: str):
                     sub_token += c
                 else:
                     if sub_tipo == "numero" and not c.isdigit():
-                        resultados.append((sub_token, categorizar_token(sub_token), pos))
+                        dividir_y_agregar(sub_token, pos, resultados)
                         pos += 1
                         sub_token = ""
                         sub_tipo = None
                         continue
                     elif sub_tipo in ["variable", "atomo"] and not (c.isalnum() or c == '_'):
-                        resultados.append((sub_token, categorizar_token(sub_token), pos))
+                        dividir_y_agregar(sub_token, pos, resultados)
                         pos += 1
                         sub_token = ""
                         sub_tipo = None
@@ -62,30 +70,11 @@ def analizar_codigo(codigo: str):
                 sub_i += 1
 
             if sub_token != "":
-                # Intentar detectar palabras reservadas dentro del resto
-                temp_i = 0
-                while temp_i < len(sub_token):
-                    acumulado = ""
-                    k = temp_i
-                    while k < len(sub_token):
-                        acumulado += sub_token[k]
-                        if es_palabra_reservada(acumulado):
-                            resultados.append((acumulado, "Palabra Reservada", pos))
-                            pos += 1
-                            temp_i = k + 1
-                            break
-                        k += 1
-                    else:
-                        # No es palabra reservada, construir token válido
-                        fragmento = ""
-                        while temp_i < len(sub_token) and not es_palabra_reservada(sub_token[temp_i:]):
-                            fragmento += sub_token[temp_i]
-                            temp_i += 1
-                        if fragmento != "":
-                            resultados.append((fragmento, categorizar_token(fragmento), pos))
-                            pos += 1
-                i = j
-                continue
+                dividir_y_agregar(sub_token, pos, resultados)
+                pos += 1
+
+            i = j
+            continue
 
         if i < longitud and (codigo[i].isalnum() or codigo[i] == '_'):
             i += 1
@@ -93,6 +82,8 @@ def analizar_codigo(codigo: str):
 
         if i < longitud:
             c = codigo[i]
+
+            # Manejo especial del punto y número real
             if c == '.':
                 if len(resultados) > 0 and resultados[-1][1] == "Número Natural" and i + 1 < longitud and codigo[i + 1].isdigit():
                     anterior = resultados.pop()
@@ -107,17 +98,27 @@ def analizar_codigo(codigo: str):
                     resultados.append(('.', "Símbolo", pos))
                     i += 1
                     pos += 1
+
             elif c.strip() != "":
-                if c in simbolos_validos:
+                # Verifica si es símbolo aritmético simple
+                if es_simbolo_aritmetico(c):
+                    resultados.append((c, "Operador Aritmético", pos))
+                    i += 1
+                    pos += 1
+                elif c in simbolos_validos:
                     resultados.append((c, "Símbolo", pos))
+                    i += 1
+                    pos += 1
                 elif c.isdigit():
                     resultados.append((c, "Número Natural", pos))
+                    i += 1
+                    pos += 1
                 else:
                     resultados.append((c, "Token no reconocido", pos))
-                i += 1
-                pos += 1
+                    i += 1
+                    pos += 1
             else:
-                i += 1  # espacios y tabulaciones
+                i += 1  # Ignora espacios
 
     return resultados
 
@@ -125,6 +126,8 @@ def analizar_codigo(codigo: str):
 def categorizar_token(token: str) -> str:
     if es_palabra_reservada(token):
         return "Palabra Reservada"
+    elif es_simbolo_aritmetico(token):
+        return "Operador Aritmético"
     elif es_numero_real(token):
         return "Número Real"
     elif es_numero_natural(token):
@@ -135,3 +138,25 @@ def categorizar_token(token: str) -> str:
         return "Átomo"
     else:
         return "Token no reconocido"
+
+
+def dividir_y_agregar(token: str, pos_inicial: int, resultados: list):
+    """
+    Fragmenta el token en partes de máximo 10 caracteres,
+    clasifica cada fragmento y lo agrega a los resultados.
+    """
+    inicio = 0
+    while inicio < len(token):
+        fragmento = ""
+        contador = 0
+
+        for i in range(inicio, len(token)):
+            fragmento += token[i]
+            contador += 1
+            if contador == 10:
+                break
+
+        tipo = categorizar_token(fragmento)
+        resultados.append((fragmento, tipo, pos_inicial))
+        pos_inicial += 1
+        inicio += 10
