@@ -2,7 +2,7 @@ from tokens.numeros_naturales import es_numero_natural
 from tokens.numero_reales import es_numero_real
 from tokens.identificadores import es_variable, es_atomo
 from tokens.palabras_reservadas import es_palabra_reservada
-from tokens.operadores_aritmeticos import es_simbolo_aritmetico
+from tokens.operadores_aritmeticos import es_operador_aritmetico
 from tokens.operadores_comparacion import es_operador_comparativo
 from tokens.operadores_logicos import es_operador_logico
 from tokens.operadores_asignacion import es_operador_asignacion
@@ -63,7 +63,7 @@ def analizar_codigo(codigo: str):
             continue
 
         # 🔹 "mod" como operador aritmético
-        if codigo[i:i+3] == "mod" and es_simbolo_aritmetico("mod"):
+        if codigo[i:i+3] == "mod" and es_operador_aritmetico("mod"):
             resultados.append(("mod", "Operador Aritmético", pos))
             pos += 1
             i += 3
@@ -133,7 +133,7 @@ def analizar_codigo(codigo: str):
                     decimal += codigo[i]
                     i += 1
                 resultados.append((numero + '.' + decimal, "Número Real", anterior[2]))
-            elif es_simbolo_aritmetico(c):
+            elif es_operador_aritmetico(c):
                 resultados.append((c, "Operador Aritmético", pos))
                 i += 1
                 pos += 1
@@ -153,7 +153,7 @@ def analizar_codigo(codigo: str):
 def categorizar_token(token: str) -> str:
     if es_palabra_reservada(token):
         return "Palabra Reservada"
-    elif es_simbolo_aritmetico(token):
+    elif es_operador_aritmetico(token):
         return "Operador Aritmético"
     elif es_operador_comparativo(token):
         return "Operador de Comparación"
