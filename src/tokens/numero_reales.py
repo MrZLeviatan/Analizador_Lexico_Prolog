@@ -5,6 +5,8 @@ def es_numero_real(cadena: str) -> bool:
     Reglas:
     - Debe contener exactamente un punto.
     - Debe tener al menos un dígito antes y después del punto.
+
+    Ejemplo: 2.3 / 66.6 / 1.2 
     """
 
     punto_encontrado = False        # Bandera para indicar si ya se encontró un punto

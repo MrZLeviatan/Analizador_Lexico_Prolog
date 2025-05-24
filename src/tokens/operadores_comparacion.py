@@ -1,7 +1,7 @@
 def es_operador_comparativo(cadena: str) -> bool:
     """
     Verifica si una cadena es un operador de comparación válido en Prolog.
-    Permitido: "==", "-==", "<", ">", "=<", ">="
+    Permitido: "==", "-==", "<", ">", "=<", ">=" , "=:=" , "=/="
     """
 
     longitud = len(cadena)  # Se obtiene la longitud de la cadena
@@ -31,6 +31,13 @@ def es_operador_comparativo(cadena: str) -> bool:
             if cadena[1] == '=':
                 if cadena[2] == '=':  # No igualdad (-==)
                     return True
+        elif cadena[0] == '=':
+            if cadena[1] == ':':
+                if cadena[2] == '=':  # Unificación (=:=)
+                    return True
+            elif cadena[1] == '/':
+                if cadena[2] == '=':  # Desigualdad (=/=)
+                    return True    
 
     # Si no coincide con ninguno, no es operador válido
     return False

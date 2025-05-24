@@ -1,4 +1,4 @@
-def es_simbolo_aritmetico(cadena: str) -> bool:
+def es_operador_aritmetico(cadena: str) -> bool:
     """
     Verifica si una cadena es un símbolo aritmético válido en Prolog.
     Permitido: "+", "-", "*", "/", "mod"
