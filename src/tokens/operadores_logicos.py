@@ -18,6 +18,11 @@ def es_operador_logico(cadena: str) -> bool:
             return True
         elif cadena[0] == '-' and cadena[1] == '>':  # Implicación (->)
             return True
+        
+    # Operadores lógicos de tres caracteres    
+    elif longitud == 3:
+        if cadena[0] == 'n' and cadena[1] == 'o' and cadena[2] == 't': # Negación lógica (not)
+            return True
 
     # Si no coincide con ninguno de los operadores válidos
     return False

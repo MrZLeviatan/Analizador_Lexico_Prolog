@@ -2,11 +2,11 @@ from tokens.numeros_naturales import es_numero_natural
 from tokens.numero_reales import es_numero_real
 from tokens.identificadores import es_variable, es_atomo
 from tokens.palabras_reservadas import es_palabra_reservada
-from tokens.simbolos_aritmeticos import es_simbolo_aritmetico
+from tokens.operadores_aritmeticos import es_simbolo_aritmetico
 from tokens.operadores_comparacion import es_operador_comparativo
 from tokens.operadores_logicos import es_operador_logico
+from tokens.operadores_asignacion import es_operador_asignacion
 
-simbolos_validos = ['=', ',', '.', '(', ')', '{', '}', '+', '-', '*', '/', '<', '>', '!']
 
 def analizar_codigo(codigo: str):
     resultados = []
@@ -23,8 +23,8 @@ def analizar_codigo(codigo: str):
         j = i
         detectado = False
 
-        # 🔹 Prioridad: operadores lógicos (->, \+, ;, ,)
-        for log_len in (2, 1):
+        # 🔹 Prioridad: operadores lógicos (->, \+, ;, ',' , not )
+        for log_len in (3,2, 1):
             if i + log_len <= longitud:
                 posible_logico = codigo[i:i+log_len]
                 if es_operador_logico(posible_logico):
@@ -44,6 +44,19 @@ def analizar_codigo(codigo: str):
                     resultados.append((posible_op, "Operador de Comparación", pos))
                     pos += 1
                     i += op_len
+                    detectado = True
+                    break
+        if detectado:
+            continue
+
+        # Detectar operadores de asignación (:= , = , is)
+        for asig_len in (2, 1):
+            if i + asig_len <= longitud:
+                posible_asig = codigo[i:i+asig_len]
+                if es_operador_asignacion(posible_asig):
+                    resultados.append((posible_asig, "Operador de Asignación", pos))
+                    pos += 1
+                    i += asig_len
                     detectado = True
                     break
         if detectado:
@@ -124,10 +137,7 @@ def analizar_codigo(codigo: str):
                 resultados.append((c, "Operador Aritmético", pos))
                 i += 1
                 pos += 1
-            elif c in simbolos_validos:
-                resultados.append((c, "Símbolo", pos))
-                i += 1
-                pos += 1
+            
             elif c.isdigit():
                 resultados.append((c, "Número Natural", pos))
                 i += 1
@@ -147,6 +157,8 @@ def categorizar_token(token: str) -> str:
         return "Operador Aritmético"
     elif es_operador_comparativo(token):
         return "Operador de Comparación"
+    elif es_operador_logico(token):
+        return "Operador de Asignacion"
     elif es_operador_logico(token):
         return "Operador Lógico"
     elif es_numero_real(token):

@@ -4,7 +4,7 @@ def es_palabra_reservada(cadena: str) -> bool:
     Verifica si una cadena es una palabra reservada en Prolog.
     Solo se permite usar if/else y comparación carácter por carácter.
 
-    Ejemplo: is / not / halt
+    Ejemplo: is / not / halt / true / repeat / retract
     """
 
     longitud = len(cadena)  # Obtener la longitud de la cadena
