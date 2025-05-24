@@ -3,6 +3,7 @@ from tokens.numero_reales import es_numero_real
 from tokens.identificadores import es_variable, es_atomo
 from tokens.palabras_reservadas import es_palabra_reservada
 from tokens.simbolos_aritmeticos import es_simbolo_aritmetico
+from tokens.operadores_comparacion import es_operador_comparativo
 
 simbolos_validos = ['=', ',', '.', '(', ')', '{', '}', '+', '-', '*', '/', '<', '>', '!']
 
@@ -13,19 +14,35 @@ def analizar_codigo(codigo: str):
     longitud = len(codigo)
 
     while i < longitud:
+        if codigo[i].isspace():
+            i += 1
+            continue
+
         token = ""
         j = i
         detectado = False
 
-        # Verifica si empieza con 'mod' para tomarlo como operador aritmético
-        if codigo[i:i+3] == "mod":
-            if es_simbolo_aritmetico("mod"):
-                resultados.append(("mod", "Operador Aritmético", pos))
-                pos += 1
-                i += 3
-                continue
+        # Detectar operador de comparación de hasta 3 caracteres
+        for op_len in (3, 2, 1):
+            if i + op_len <= longitud:
+                posible_op = codigo[i:i+op_len]
+                if es_operador_comparativo(posible_op):
+                    resultados.append((posible_op, "Operador de Comparación", pos))
+                    pos += 1
+                    i += op_len
+                    detectado = True
+                    break
+        if detectado:
+            continue
 
-        # Detectar palabra reservada completa
+        # Detectar "mod" como operador aritmético
+        if codigo[i:i+3] == "mod" and es_simbolo_aritmetico("mod"):
+            resultados.append(("mod", "Operador Aritmético", pos))
+            pos += 1
+            i += 3
+            continue
+
+        # Detectar palabra reservada
         while j < longitud and (codigo[j].isalnum() or codigo[j] == '_'):
             token += codigo[j]
             if es_palabra_reservada(token):
@@ -39,7 +56,8 @@ def analizar_codigo(codigo: str):
         if detectado:
             continue
 
-        if token != "":
+        # Identificadores y tokens alfanuméricos
+        if token.strip() != "":
             sub_i = 0
             sub_token = ""
             sub_tipo = None
@@ -76,14 +94,10 @@ def analizar_codigo(codigo: str):
             i = j
             continue
 
-        if i < longitud and (codigo[i].isalnum() or codigo[i] == '_'):
-            i += 1
-            continue
-
+        # Procesar caracteres individuales
         if i < longitud:
             c = codigo[i]
 
-            # Manejo especial del punto y número real
             if c == '.':
                 if len(resultados) > 0 and resultados[-1][1] == "Número Natural" and i + 1 < longitud and codigo[i + 1].isdigit():
                     anterior = resultados.pop()
@@ -99,26 +113,25 @@ def analizar_codigo(codigo: str):
                     i += 1
                     pos += 1
 
-            elif c.strip() != "":
-                # Verifica si es símbolo aritmético simple
-                if es_simbolo_aritmetico(c):
-                    resultados.append((c, "Operador Aritmético", pos))
-                    i += 1
-                    pos += 1
-                elif c in simbolos_validos:
-                    resultados.append((c, "Símbolo", pos))
-                    i += 1
-                    pos += 1
-                elif c.isdigit():
-                    resultados.append((c, "Número Natural", pos))
-                    i += 1
-                    pos += 1
-                else:
-                    resultados.append((c, "Token no reconocido", pos))
-                    i += 1
-                    pos += 1
+            elif es_simbolo_aritmetico(c):
+                resultados.append((c, "Operador Aritmético", pos))
+                i += 1
+                pos += 1
+
+            elif c in simbolos_validos:
+                resultados.append((c, "Símbolo", pos))
+                i += 1
+                pos += 1
+
+            elif c.isdigit():
+                resultados.append((c, "Número Natural", pos))
+                i += 1
+                pos += 1
+
             else:
-                i += 1  # Ignora espacios
+                resultados.append((c, "Token no reconocido", pos))
+                i += 1
+                pos += 1
 
     return resultados
 
@@ -128,6 +141,8 @@ def categorizar_token(token: str) -> str:
         return "Palabra Reservada"
     elif es_simbolo_aritmetico(token):
         return "Operador Aritmético"
+    elif es_operador_comparativo(token):
+        return "Operador de Comparación"
     elif es_numero_real(token):
         return "Número Real"
     elif es_numero_natural(token):
@@ -149,13 +164,11 @@ def dividir_y_agregar(token: str, pos_inicial: int, resultados: list):
     while inicio < len(token):
         fragmento = ""
         contador = 0
-
         for i in range(inicio, len(token)):
             fragmento += token[i]
             contador += 1
             if contador == 10:
                 break
-
         tipo = categorizar_token(fragmento)
         resultados.append((fragmento, tipo, pos_inicial))
         pos_inicial += 1
