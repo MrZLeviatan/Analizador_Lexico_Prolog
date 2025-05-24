@@ -2,7 +2,7 @@
 def es_operador_logico(cadena: str) -> bool:
     """
     Verifica si una cadena es un operador lógico válido de Prolog.
-    Permitido: ",", ";", "->", "\+"
+    Permitido: ",", ";", "->", "\+" , "not"
     """
 
     longitud = len(cadena)  # Se obtiene la longitud de la cadena
