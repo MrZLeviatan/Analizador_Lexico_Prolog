@@ -6,6 +6,7 @@ from tokens.operadores_aritmeticos import es_operador_aritmetico
 from tokens.operadores_comparacion import es_operador_comparativo
 from tokens.operadores_logicos import es_operador_logico
 from tokens.operadores_asignacion import es_operador_asignacion
+from tokens.llaves import es_llave
 
 
 def analizar_codigo(codigo: str):
@@ -13,6 +14,7 @@ def analizar_codigo(codigo: str):
     i = 0
     pos = 0
     longitud = len(codigo)
+    llaves_pendientes = []  # Pila para almacenar posiciones de '{' no cerradas
 
     while i < longitud:
         if codigo[i].isspace():
@@ -23,8 +25,8 @@ def analizar_codigo(codigo: str):
         j = i
         detectado = False
 
-        # 🔹 Prioridad: operadores lógicos (->, \+, ;, ',' , not )
-        for log_len in (3,2, 1):
+        # 🔹 Operadores lógicos
+        for log_len in (3, 2, 1):
             if i + log_len <= longitud:
                 posible_logico = codigo[i:i+log_len]
                 if es_operador_logico(posible_logico):
@@ -36,7 +38,7 @@ def analizar_codigo(codigo: str):
         if detectado:
             continue
 
-        # 🔹 Operadores de comparación (==, =<, -==, etc.)
+        # 🔹 Operadores de comparación
         for op_len in (3, 2, 1):
             if i + op_len <= longitud:
                 posible_op = codigo[i:i+op_len]
@@ -49,7 +51,7 @@ def analizar_codigo(codigo: str):
         if detectado:
             continue
 
-        # Detectar operadores de asignación (:= , = , is)
+        # 🔹 Operadores de asignación
         for asig_len in (2, 1):
             if i + asig_len <= longitud:
                 posible_asig = codigo[i:i+asig_len]
@@ -82,7 +84,7 @@ def analizar_codigo(codigo: str):
         if detectado:
             continue
 
-        # 🔹 Identificadores, números alfanuméricos
+        # 🔹 Identificadores y números alfanuméricos
         if token.strip() != "":
             sub_i = 0
             sub_token = ""
@@ -120,7 +122,7 @@ def analizar_codigo(codigo: str):
             i = j
             continue
 
-        # 🔹 Caracteres individuales (símbolos, números sueltos, etc.)
+        # 🔹 Caracteres individuales
         if i < longitud:
             c = codigo[i]
 
@@ -133,19 +135,42 @@ def analizar_codigo(codigo: str):
                     decimal += codigo[i]
                     i += 1
                 resultados.append((numero + '.' + decimal, "Número Real", anterior[2]))
+
             elif es_operador_aritmetico(c):
                 resultados.append((c, "Operador Aritmético", pos))
                 i += 1
                 pos += 1
-            
+
             elif c.isdigit():
                 resultados.append((c, "Número Natural", pos))
                 i += 1
                 pos += 1
+
+            elif es_llave(c) == "Llave Abierta":
+                llaves_pendientes.append((pos, c))
+                resultados.append((c, "Llave Abierta", pos))
+
+                i += 1
+                pos += 1
+
+            elif es_llave(c) == "Llave Cerrada":
+                if llaves_pendientes:
+                    llaves_pendientes.pop()
+                    resultados.append((c, "Llave Cerrada", pos))
+                else:
+                    resultados.append((c, "Token no reconocido", pos))
+                i += 1
+                pos += 1
+
             else:
                 resultados.append((c, "Token no reconocido", pos))
                 i += 1
                 pos += 1
+
+    # Verificar llaves sin cerrar
+    for posicion, simbolo in llaves_pendientes:
+        resultados.append((simbolo, "Llave sin cerrar", posicion))
+
 
     return resultados
 
@@ -157,8 +182,8 @@ def categorizar_token(token: str) -> str:
         return "Operador Aritmético"
     elif es_operador_comparativo(token):
         return "Operador de Comparación"
-    elif es_operador_logico(token):
-        return "Operador de Asignacion"
+    elif es_operador_asignacion(token):
+        return "Operador de Asignación"
     elif es_operador_logico(token):
         return "Operador Lógico"
     elif es_numero_real(token):
