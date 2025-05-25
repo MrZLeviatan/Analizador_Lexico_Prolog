@@ -7,6 +7,7 @@ from tokens.operadores_comparacion import es_operador_comparativo
 from tokens.operadores_logicos import es_operador_logico
 from tokens.operadores_asignacion import es_operador_asignacion
 from tokens.llaves import es_llave
+from tokens.parentesis import es_parentesis
 
 
 def analizar_codigo(codigo: str):
@@ -15,6 +16,7 @@ def analizar_codigo(codigo: str):
     pos = 0
     longitud = len(codigo)
     llaves_pendientes = []  # Pila para almacenar posiciones de '{' no cerradas
+    parentesis_pendientes = [] # Pila para almacenar posiciones de '(' no cerrados
 
     while i < longitud:
         if codigo[i].isspace():
@@ -162,6 +164,24 @@ def analizar_codigo(codigo: str):
                 i += 1
                 pos += 1
 
+            elif es_parentesis(c) == "Parentesis Abierto":
+                parentesis_pendientes.append((pos,c))
+                resultados.append((c,"Parentesis Abierto",pos))
+
+                i += 1
+                pos +=1
+            
+            elif es_parentesis(c) == "Parentesis Cerrado":
+                
+                if parentesis_pendientes:
+                    parentesis_pendientes.pop()
+                    resultados.append((c,"Parentesis Cerrado", pos))
+                else:
+                    resultados.append((c,"Token no reconocido", pos))
+
+                i += 1
+                pos += 1    
+
             else:
                 resultados.append((c, "Token no reconocido", pos))
                 i += 1
@@ -171,6 +191,9 @@ def analizar_codigo(codigo: str):
     for posicion, simbolo in llaves_pendientes:
         resultados.append((simbolo, "Llave sin cerrar", posicion))
 
+    # Verificar parentesis sin cerrar 
+    for posicion, simbolo in parentesis_pendientes:
+        resultados.append((simbolo, "Parentesis sin cerrar", posicion))
 
     return resultados
 
