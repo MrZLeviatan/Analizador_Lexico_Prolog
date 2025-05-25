@@ -8,6 +8,7 @@ from tokens.operadores_logicos import es_operador_logico
 from tokens.operadores_asignacion import es_operador_asignacion
 from tokens.llaves import es_llave
 from tokens.parentesis import es_parentesis
+from tokens.cadena_caracter import es_cadena_valida
 
 
 def analizar_codigo(codigo: str):
@@ -27,7 +28,13 @@ def analizar_codigo(codigo: str):
         j = i
         detectado = False
 
-        # 🔹 Operadores lógicos
+
+        if codigo[i] == '"':
+            resultados_cadena, i, pos = es_cadena_valida(codigo, i, pos)
+            resultados.extend(resultados_cadena)
+            continue
+
+        # 🔹 Operadores lógicos y separador 'coma'
         for log_len in (3, 2, 1):
             if i + log_len <= longitud:
                 posible_logico = codigo[i:i+log_len]
