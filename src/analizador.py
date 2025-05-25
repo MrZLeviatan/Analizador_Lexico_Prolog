@@ -31,7 +31,15 @@ def analizar_codigo(codigo: str):
         for log_len in (3, 2, 1):
             if i + log_len <= longitud:
                 posible_logico = codigo[i:i+log_len]
-                if es_operador_logico(posible_logico):
+
+                # Separadores especiales: ','
+                if posible_logico == ',':
+                    resultados.append((posible_logico, "Operador Lógico", pos))
+                    resultados.append((posible_logico, "Separador", pos))
+                    i += 1
+                    pos += 1
+
+                elif es_operador_logico(posible_logico):
                     resultados.append((posible_logico, "Operador Lógico", pos))
                     pos += 1
                     i += log_len
@@ -128,15 +136,26 @@ def analizar_codigo(codigo: str):
         if i < longitud:
             c = codigo[i]
 
-            if c == '.' and len(resultados) > 0 and resultados[-1][1] == "Número Natural" and i + 1 < longitud and codigo[i + 1].isdigit():
-                anterior = resultados.pop()
-                numero = anterior[0]
-                i += 1
-                decimal = ""
-                while i < longitud and codigo[i].isdigit():
-                    decimal += codigo[i]
+            # Detectar punto como número real o como terminador
+            if c == '.':
+                if len(resultados) > 0 and resultados[-1][1] == "Número Natural" and i + 1 < longitud and codigo[i + 1].isdigit():
+                    anterior = resultados.pop()
+                    numero = anterior[0]
                     i += 1
-                resultados.append((numero + '.' + decimal, "Número Real", anterior[2]))
+                    decimal = ""
+                    while i < longitud and codigo[i].isdigit():
+                        decimal += codigo[i]
+                        i += 1
+                    resultados.append((numero + '.' + decimal, "Número Real", anterior[2]))
+                    pos += 1
+                else:
+                    # Verificar si es un punto al final de una sentencia
+                    if (i + 1 == longitud) or codigo[i + 1].isspace():
+                        resultados.append(('.', "Terminador", pos))
+                    else:
+                        resultados.append(('.', "Token no reconocido", pos))
+                    i += 1
+                    pos += 1
 
             elif es_operador_aritmetico(c):
                 resultados.append((c, "Operador Aritmético", pos))
@@ -181,6 +200,14 @@ def analizar_codigo(codigo: str):
 
                 i += 1
                 pos += 1    
+
+
+            # Separadores especiales: '|'
+            elif c == '|':
+                resultados.append((c, "Separador", pos))
+                i += 1
+                pos += 1
+
 
             else:
                 resultados.append((c, "Token no reconocido", pos))
