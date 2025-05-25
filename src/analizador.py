@@ -9,6 +9,7 @@ from tokens.operadores_asignacion import es_operador_asignacion
 from tokens.llaves import es_llave
 from tokens.parentesis import es_parentesis
 from tokens.cadena_caracter import es_cadena_valida
+from tokens.comentarios import es_comentario_valido
 
 
 def analizar_codigo(codigo: str):
@@ -33,6 +34,14 @@ def analizar_codigo(codigo: str):
             resultados_cadena, i, pos = es_cadena_valida(codigo, i, pos)
             resultados.extend(resultados_cadena)
             continue
+
+        # 🔹 Comentarios de una línea % o de bloque /*
+        if codigo[i] == '%' or codigo[i:i+2] == "/*":
+            resultados_comentario, i, pos = es_comentario_valido(codigo, i, pos)
+            resultados.extend(resultados_comentario)
+            continue
+
+
 
         # 🔹 Operadores lógicos y separador 'coma'
         for log_len in (3, 2, 1):

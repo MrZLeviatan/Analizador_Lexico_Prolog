@@ -1,70 +1,123 @@
-def es_variable(cadena: str) -> bool:
+# Listas de caracteres válidos para el análisis
+LETRAS_MAYUS = [
+    'A','B','C','D','E','F','G','H','I','J','K','L',
+    'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+]
 
+LETRAS_MINUS = [
+    'a','b','c','d','e','f','g','h','i','j','k','l',
+    'm','n','o','p','q','r','s','t','u','v','w','x','y','z'
+]
+
+DIGITOS = ['0','1','2','3','4','5','6','7','8','9']
+
+GUION_BAJO = '_'
+
+
+def es_variable(cadena: str) -> bool:
     """
     Verifica si una cadena es una variable en Prolog.
-    Reglas:
-    - Debe comenzar con una letra mayúscula o con un guion bajo.
-    - Puede estar seguida de letras (mayúsculas o minúsculas), dígitos o guiones bajos.
-    - Máximo 10 caracteres.
-    
-    Ejemplos válidos: "X", "_aux", "Var123"
+    - Debe comenzar con letra mayúscula o '_'
+    - Puede tener letras, dígitos o '_' después
+    - Máximo 10 caracteres
     """
-    
+
     if len(cadena) == 0 or len(cadena) > 10:
-        # Si la cadena está vacía o excede 10 caracteres, no es una variable válida
         return False
 
-    primera = cadena[0]  # Se obtiene el primer carácter de la cadena
+    primer = cadena[0]
 
-    if not (primera == '_' or ('A' <= primera <= 'Z')):
-        # Si el primer carácter no es un guion bajo ni una letra mayúscula, no es variable
+    # Verificar primer carácter: letra mayúscula o guion bajo
+    primero_valido = False
+    if primer == GUION_BAJO:
+        primero_valido = True
+    else:
+        for letra in LETRAS_MAYUS:
+            if primer == letra:
+                primero_valido = True
+                break
+
+    if not primero_valido:
         return False
 
-    for char in cadena[1:]:
-        # Se recorren los caracteres restantes
-        if not (
-            ('a' <= char <= 'z') or    # Letras minúsculas
-            ('A' <= char <= 'Z') or    # Letras mayúsculas
-            ('0' <= char <= '9') or    # Dígitos
-            (char == '_')              # Guion bajo
-        ):
-            # Si encuentra un carácter inválido, no es una variable válida
+    # Verificar caracteres restantes: mayúsculas, minúsculas, dígitos o guion bajo
+    for c in cadena[1:]:
+        valido = False
+
+        for letra in LETRAS_MAYUS:
+            if c == letra:
+                valido = True
+                break
+
+        if not valido:
+            for letra in LETRAS_MINUS:
+                if c == letra:
+                    valido = True
+                    break
+
+        if not valido:
+            for d in DIGITOS:
+                if c == d:
+                    valido = True
+                    break
+
+        if not valido and c == GUION_BAJO:
+            valido = True
+
+        if not valido:
             return False
 
-    return True  # Todos los caracteres cumplen las reglas → es una variable válida
-
+    return True
 
 
 def es_atomo(cadena: str) -> bool:
-
     """
     Verifica si una cadena es un átomo en Prolog.
-    Reglas:
-    - Debe comenzar con una letra minúscula.
-    - Puede estar seguida de letras, dígitos o guiones bajos.
-    
-    Ejemplos válidos: "atom", "valor1", "dato_aux"
+    - Debe comenzar con letra minúscula
+    - Puede tener letras, dígitos o '_' después
+    - Máximo 10 caracteres
     """
-    
+
     if len(cadena) == 0 or len(cadena) > 10:
-        # Si la cadena está vacía o excede 10 caracteres, no puede ser un átomo válido
         return False
 
-    primera = cadena[0]  # Se obtiene el primer carácter de la cadena
+    primer = cadena[0]
 
-    if not ('a' <= primera <= 'z'):
-        # Si el primer carácter no es una letra minúscula, no es un átomo válido
+    # Verificar primer carácter: letra minúscula
+    primero_valido = False
+    for letra in LETRAS_MINUS:
+        if primer == letra:
+            primero_valido = True
+            break
+
+    if not primero_valido:
         return False
 
-    for char in cadena[1:]:
-        # Se recorren los caracteres restantes
-        if not (
-            ('a' <= char <= 'z') or    # Letras minúsculas
-            ('A' <= char <= 'Z') or    # Letras mayúsculas
-            ('0' <= char <= '9') or    # Dígitos
-            (char == '_')              # Guion bajo
-        ):
-            # Si encuentra un carácter inválido, no es un átomo válido
+    # Verificar caracteres restantes: mayúsculas, minúsculas, dígitos o guion bajo
+    for c in cadena[1:]:
+        valido = False
+
+        for letra in LETRAS_MAYUS:
+            if c == letra:
+                valido = True
+                break
+
+        if not valido:
+            for letra in LETRAS_MINUS:
+                if c == letra:
+                    valido = True
+                    break
+
+        if not valido:
+            for d in DIGITOS:
+                if c == d:
+                    valido = True
+                    break
+
+        if not valido and c == GUION_BAJO:
+            valido = True
+
+        if not valido:
             return False
 
-    return True  # Todos los caracteres cumplen las reglas → es un átomo válido
+    return True
