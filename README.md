@@ -1,4 +1,4 @@
-![Tablero en blanco (9)](https://github.com/user-attachments/assets/f07a7cfd-b4b6-4f97-96de-75817aac1497)# Analizador Léxico para Prolog: Reconocimiento de Tokens mediante Autómatas Finitos Deterministas
+# Analizador Léxico para Prolog: Reconocimiento de Tokens mediante Autómatas Finitos Deterministas
 
 ## 📝 Introducción
 
@@ -40,7 +40,7 @@ Este diseño permite aceptar tanto un único dígito (como `7`) como secuencias 
 * No se aceptan decimales ni letras ni cualquier otro tipo de caracteres.
 
 **AFD Números Naturales:**
-![AFD Números Naturales](https://github.com/user-attachments/assets/4beb52dc-4dd8-4ae0-bda4-4c0934061261))
+![AFD Números Naturales](https://github.com/user-attachments/assets/4beb52dc-4dd8-4ae0-bda4-4c0934061261)
 
 ---
 
