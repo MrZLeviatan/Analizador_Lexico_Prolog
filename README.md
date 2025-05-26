@@ -8,13 +8,6 @@ Cada sección de este documento describe un token específico, incluyendo su def
 
 **Nota Importante:** Para optimizar la claridad visual de los diagramas y cumplir con las métricas del proyecto, **los estados sumidero (o estados trampa) han sido omitidos en las representaciones gráficas de los AFD.** La ausencia de una transición explícita para un determinado símbolo de entrada desde un estado particular implica que la cadena de entrada conduciría implícitamente a un estado sumidero, resultando en el rechazo de dicha cadena.
 
-## 📦 Estructura del Repositorio
-
-* `README.md`: Este documento principal que describe el proyecto.
-* `docs/`: (Opcional) Carpeta que contendría la versión formal de este documento en un formato como PDF o DOCX.
-* `img/`: Carpeta que contendrá todos los diagramas de los AFDs correspondientes a cada token. Asegúrate de que los nombres de archivo coincidan con los que se usan en las referencias de este README.
-* `src/`: (Opcional) Carpeta donde se ubicará el código fuente de tu analizador léxico en Python.
-
 ## ✨ Tokens Reconocidos y su Diseño mediante AFD
 
 ---
