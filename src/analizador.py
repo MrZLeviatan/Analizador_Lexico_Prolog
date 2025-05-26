@@ -55,6 +55,8 @@ def analizar_codigo(codigo: str):
                     resultados.append((posible_logico, "Separador", pos))
                     i += 1
                     pos += 1
+                    detectado = True
+                    break
 
                 elif es_operador_logico(posible_logico):
                     resultados.append((posible_logico, "Operador Lógico", pos))
