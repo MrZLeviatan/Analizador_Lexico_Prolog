@@ -32,7 +32,8 @@ Este diseño permite aceptar tanto un único dígito (como `7`) como secuencias 
 * No se permite el signo `+` o `-` al inicio de los números naturales.
 * No se aceptan decimales ni letras ni cualquier otro tipo de caracteres.
 
-**AFD Variables:**
+**AFD Números Naturales:**
+
 ![AFD Números Naturales](https://github.com/user-attachments/assets/4beb52dc-4dd8-4ae0-bda4-4c0934061261)
 
 ---
