@@ -389,6 +389,7 @@ Este AFD no requiere estados adicionales ni transiciones complejas, ya que el pu
 * Es una buena práctica de programación y puede ayudar al analizador léxico a evitar ambigüedades, si se usa un espacio o un salto de línea después del punto que finaliza una sentencia.
 
 **AFD Terminal (fin de sentencia):**
+
 ![AFD Terminal (fin de sentencia)](https://github.com/user-attachments/assets/23f7f036-0a9f-44ba-b1ef-aa92772057ab)
 
 
@@ -417,6 +418,7 @@ No requiere más transiciones ni condiciones adicionales, ya que la coma es un s
 * El significado semántico y el rol de la coma (si es un separador de argumentos o un operador de conjunción) se interpretan en la fase de análisis sintáctico (parsing), dependiendo del contexto gramatical en el que aparezca.
 
 **AFD Separador (Coma):**
+
 ![AFD Separador (Coma)](https://github.com/user-attachments/assets/79b9a9ac-c47e-4371-ad2b-893aa94880cc)
 
 
