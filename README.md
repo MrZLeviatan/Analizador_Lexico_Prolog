@@ -68,7 +68,7 @@ El autómata inicia leyendo un dígito (`D`) y permite una o más repeticiones p
 
 **AFD Números Reales:**
 ![AFD Números Reales](https://github.com/user-attachments/assets/6f346b4d-ac3b-4721-9278-1e8af9eb949c)
- )
+ 
 
 ---
 
