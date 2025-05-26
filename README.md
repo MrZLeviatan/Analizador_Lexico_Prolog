@@ -232,7 +232,8 @@ Cada combinación de símbolos que forma un operador válido lleva a un estado f
 * El autómata fue diseñado para permitir un reconocimiento eficiente y sin ambigüedades, estructurándose lógicamente a partir de los símbolos iniciales esperados (`=`, `<`, `>`, `-`).
 
 **AFD Operadores de Comparación:**
-![AFD Operadores de Comparación](https://github.com/user-attachments/assets/92d6a9a1-2fae-4065-8c1c-67207b7fe630)
+![AFD Operadores de Comparación](https://github.com/user-attachments/assets/fa6ad0b6-5d45-412e-8628-9183440bc34c)
+
  
 
 ---
