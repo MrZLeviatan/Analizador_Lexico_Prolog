@@ -154,7 +154,6 @@ Estos autómatas son inherentemente simples, ya que no permiten repeticiones, bu
 * Son esenciales para el funcionamiento del lenguaje y, por lo tanto, deben tener prioridad en el proceso de análisis léxico sobre otros posibles tokens como los identificadores.
 
 **AFD Palabras Reservadas:**
-*(Aquí deberías insertar los diagramas de los AFDs para cada palabra reservada. Ejemplos de nombres de archivo sugeridos: `img/afd_is.png`, `img/afd_not.png`, `img/afd_fail.png`, etc.)*
 ![AFD Palabras Reservadas](https://github.com/user-attachments/assets/68a9a658-a6ee-4942-a51d-438aba54f256)
 
 
