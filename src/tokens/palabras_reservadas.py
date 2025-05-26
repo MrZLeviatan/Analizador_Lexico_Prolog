@@ -42,6 +42,15 @@ def es_palabra_reservada(cadena: str) -> bool:
                             if cadena[3] == 't':  # Cuarta letra 't'
                                 return True  # Es palabra reservada "halt"
 
+    elif longitud == 5:
+        if cadena[0] == 'f':  # Primera letra 'f'
+            if cadena[1] == 'a':  # Segunda letra 'a'
+                if cadena[2] == 'l':  # Tercera letra 'l'
+                    if cadena[3] == 's':  # Cuarta letra 's'
+                        if cadena[4] == 'e':  # Quinta letra 'e'
+                            return True  # Es palabra reservada "false"
+
+
     # Palabras reservadas de longitud 6: "repeat", "assert", "clause"
     elif longitud == 6:
         if cadena[0] == 'r':  # Primera letra 'r'
@@ -67,6 +76,8 @@ def es_palabra_reservada(cadena: str) -> bool:
                                 if cadena[4] == 's':  # Quinta letra 's'
                                     if cadena[5] == 'e':  # Sexta letra 'e'
                                         return True  # Es palabra reservada "clause"
+                                    
+    
 
     # Palabras reservadas de longitud 7: "consult", "retract"
     elif longitud == 7:
