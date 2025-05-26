@@ -260,6 +260,7 @@ El AFD para operadores lógicos está diseñado para reconocer los distintos pat
 * Los operadores de un solo símbolo (`,` y `;`) y el operador `->` pueden ser agrupados lógicamente en un mismo AFD debido a sus patrones de reconocimiento simples y directos, que se distinguen por el carácter inicial.
 
 **AFD Operadores Lógicos (General):**
+
 ![AFD Operadores Lógicos](https://github.com/user-attachments/assets/1a378fff-8d8b-4f42-9d30-879bf50b6c4a)
 
 
